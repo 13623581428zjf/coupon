@@ -8,8 +8,9 @@ import 'vant/lib/index.css'
 Vue.use(Vant)
 import 'amfe-flexible/index.js'
 import BScroll from 'better-scroll'
+import axios from 'axios'
+Vue.prototype.$http = axios
 Vue.config.productionTip = false
-
 
 /* eslint-disable no-new */
 new Vue({
