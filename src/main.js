@@ -7,6 +7,7 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 Vue.use(Vant)
 import 'amfe-flexible/index.js'
+import BScroll from 'better-scroll'
 Vue.config.productionTip = false
 
 

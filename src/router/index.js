@@ -6,6 +6,8 @@ import classify from '@/components/C/classify'
 import collect from '@/components/D/collect'
 import me from '@/components/E/me'
 import Tabbar from '@/components/Tabbar'
+import scroll from '@/components/scroll'
+import goods from '@/components/shopList/goods'
 
 Vue.use(Router)
 const originalReplace = Router.prototype.replace;
@@ -49,6 +51,18 @@ export default new Router({
 			path: '/components/Tabbar',
 			name: 'Tabbar',
 			component: Tabbar
+		},
+		//组件
+		{
+			path: '/components/scroll',
+			name: 'scroll',
+			component: scroll
+		},
+		//elm商品详情
+		{
+			path: '/components/shopList/goods',
+			name: 'goods',
+			component: goods
 		}
 	]
 })
