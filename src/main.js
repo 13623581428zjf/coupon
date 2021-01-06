@@ -9,6 +9,7 @@ Vue.use(Vant)
 import 'amfe-flexible/index.js'
 import BScroll from 'better-scroll'
 import axios from 'axios'
+import './rem.js'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
