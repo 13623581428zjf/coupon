@@ -211,14 +211,14 @@
 	}
 	
 	.itemList-img {
-		width: 90%;
+		width: 85%;
 		height: 2.05rem;
-		padding:  .2rem;
+		padding: .45rem;
 	}
 	
 	.itemList-img img {
 		width: 100%;
-		margin-top: -.3rem;
+		margin-top: -.5rem;
 	}
 	
 	.itemList-title {

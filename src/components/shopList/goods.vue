@@ -53,7 +53,7 @@
 				</ul>
 			</div>
 		</div>
-
+		<footer>底部</footer>
 	</div>
 </template>
 <script>
@@ -144,8 +144,7 @@
 	}
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="stylus" rel="stylesheet/stylus">
+<style scoped="scoped">
 	header {
 		width: 100%;
 		height: 172px;
@@ -159,21 +158,20 @@
 	.goods {
 		display: flex;
 		position: absolute;
-		top: 174px; // 这里是距离header和tab
-		bottom: 46px; // 距离底部导航
+		top: 174px;  
+		bottom: 46px;  
 		width: 100%;
 		overflow: hidden;
 	}
 	
 	.menu-wrapper {
-		// 菜单区域
-		flex: 0 0 80px; // 即存在剩余空间也不放大 内容缩放情况 占位空间
-		width: 80px; // 这里是兼容安卓浏览器
+		flex: 0 0 80px; 
+		width: 80px;  
 		background: #f3f5f7;
 	}
 	
 	.menu-item {
-		display: table; // 这里使用display:table 无论有几行文字都能垂直居中
+		display: table;  
 		width: 56px;
 		height: 57px;
 		padding: 0 12px;
@@ -181,29 +179,25 @@
 	}
 	
 	.current {
-		// 左侧当前选中的样式
 		position: relative;
-		margin-top: -1px; // 这里需要加个相对定位才使生效，margin-top 挡住1px的边框
+		margin-top: -1px;  
 		background: #fff;
 		color: forestgreen;
 	}
 	
 	.text {
-		// 优惠文字
 		display: table-cell;
 		width: 56px;
 		vertical-align: middle;
-		border-1px: (rgba(7, 17, 27, .1)); // 1像素，还需要另外指定1px的class
+		border-1px: (rgba(7, 17, 27, .1)); 
 		font-size: 12px;
 	}
 	
 	.foods-wrapper {
-		// 右侧食品区域
 		flex: 1;
 	}
 	
 	.title {
-		// 右侧商品（分类）标题
 		padding-left: 14px;
 		height: 26px;
 		line-height: 26px;
@@ -214,7 +208,6 @@
 	}
 	
 	.food-item {
-		// 右侧商品区域
 		display: flex;
 		padding: 18px 0;
 		border-1px: (rgba(7, 17, 27, .1));
@@ -229,13 +222,11 @@
 	}
 	
 	.content {
-		// 右侧内容
 		flex: 1;
 		margin-left: 10PX;
 	}
 	
 	.name {
-		// 商品名
 		margin: 2px 0 8px 0;
 		height: 14px;
 		line-height: 14px;
@@ -245,20 +236,16 @@
 	
 	.desc,
 	.extra {
-		// 商品描述和销量的共有样式
 		line-height: 10px;
 		font-size: 10px;
 		color: rgb(147, 153, 159)
 	}
 	
 	.desc {
-		// 描述
-		// border:0.1px solid red;
-		margin-bottom: 8px;
 		line-height: 20px;
 	}
 	
-	.extra, // 销量
+	.extra,  
 	.count {
 		margin-right: 12px;
 	}
@@ -278,5 +265,15 @@
 		font-size: 10px;
 		color: rgb(147, 153, 159);
 	}
-	/**/
+	footer{
+		width: 100%;
+		height:46px ;
+		width: 100%;
+		text-align: center;
+		background: #E0E0E0;
+		position: fixed;
+		bottom: 0;
+		line-height: 46px;
+		font-size: 15px;
+	}
 </style>
