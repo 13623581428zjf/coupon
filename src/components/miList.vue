@@ -3,7 +3,11 @@
 	<div>
 		<!--分类-->
 		<div class="search">
-			<div>分类</div>
+			<van-nav-bar :border=false title="分类" left-arrow left-text='' @click-left="onClickLeft" @click-right="onClickRight">
+				<template #right>
+					<van-icon name="search" size="18" color='#666' />
+				</template>
+			</van-nav-bar>
 			<!--中间-->
 			<div class="shop">
 				<!--左边-->
@@ -12,6 +16,7 @@
 						<li @click="clickList(index)" ref='menuList' class="menu-item" v-for="(goods,index) in searchgoods" :key='index' :class="{current:index===currentIndex}">
 							<span>{{goods.left}}</span>
 						</li>
+						<div style="height: 0.3rem;"></div>
 					</ul>
 				</div>
 				<!--右边-->
@@ -42,8 +47,8 @@
 					</ul>
 				</div>
 			</div>
-			<footerbar></footerbar>
 		</div>
+		<FooterBar></FooterBar>
 	</div>
 </template>
 
@@ -51,12 +56,10 @@
 	import BScroll from 'better-scroll'
 	import { Toast } from 'vant';
 	import Data from './data.json'
-	import footerbar from './footerBar'
+	import FooterBar from './footerBar.vue'
 	export default {
 		name: 'miList',
-		components: {
-			footerbar
-		},
+		components: {},
 		data() {
 			return {
 				scrollY: 0, //右侧列表滑动的y轴坐标
@@ -71,7 +74,9 @@
 			console.log(Data);
 			this.searchgoods = Data;
 		},
-		components: {},
+		components: {
+			FooterBar
+		},
 		watch: {
 			searchgoods() {
 				//监听数据
@@ -127,7 +132,15 @@
 				let menu = this.$refs.menuList;
 				let el = menu[index];
 				this.leftBscroll.scrollToElement(el, 300, 0, -300)
+			},
+			//返回上一级
+			onClickLeft: function() {
+				console.log('返回')
+			},
+			onClickRight: function() {
+				console.log('右边')
 			}
+
 		},
 		computed: {
 			//动态绑定class类名
@@ -165,6 +178,10 @@
 		text-align: center;
 		line-height: 1rem;
 		font-size: .35rem;
+	}
+	
+	.van-nav-bar {
+		background-color: #f2f2f2;
 	}
 	
 	.shop {
