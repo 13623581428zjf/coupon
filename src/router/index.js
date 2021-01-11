@@ -8,6 +8,11 @@ import me from '@/components/E/me'
 import Tabbar from '@/components/Tabbar'
 import scroll from '@/components/scroll'
 import goods from '@/components/shopList/goods'
+import homeMi from '@/components/home_mi'
+import footerBar from '@/components/footerBar'
+import miList from '@/components/miList'
+import miShop from '@/components/miShop'
+import onepeple from '@/components/onepeple'
 
 Vue.use(Router)
 const originalReplace = Router.prototype.replace;
@@ -63,6 +68,36 @@ export default new Router({
 			path: '/components/shopList/goods',
 			name: 'goods',
 			component: goods
+		},
+		//米首页
+		{
+			path: '/components/home_mi',
+			name: 'homeMi',
+			component: homeMi
+		},
+		//米底部tabBar
+		{
+			path: '/components/footerBar',
+			name: 'footerBar',
+			component: footerBar
+		},
+		//米分类
+		{
+			path: '/components/miList',
+			name: 'miList',
+			component: miList
+		},
+		//米购物车
+		{
+			path: '/components/miShop',
+			name: 'miShop',
+			component: miShop
+		},
+		//米个人
+		{
+			path: '/components/onepeple',
+			name: 'onepeple',
+			component: onepeple
 		}
 	]
 })
