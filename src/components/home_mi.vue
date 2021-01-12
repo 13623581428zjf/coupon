@@ -52,7 +52,7 @@
 				</div>
 				<!--列表-->
 				<div class="miList">
-					<ul v-for="(item,index) in homeList" :key='index'>
+					<ul v-for="(item,index) in homeList" :key='index' @click="clickItem(item)">
 						<img :src="item.img" />
 						<li>{{item.name}}</li>
 						<li style="font-size: .25rem;color: rgba(0,0,0,.54);">{{item.content}}</li>
@@ -99,7 +99,7 @@
 			//轮播数据
 			getHomelb: function() {
 				var that = this;
-				axios.get('https://shiyaming1994.github.io/mi/static/rotationChart.json', {
+				that.$axios.get('https://shiyaming1994.github.io/mi/static/rotationChart.json', {
 						params: {
 							page: that.page,
 							pageSize: that.pageSize
@@ -121,7 +121,7 @@
 						that.list = [];
 						that.refreshing = false;
 					}
-					axios.get('https://shiyaming1994.github.io/mi/static/homeGoods.json', {
+					that.$axios.get('https://shiyaming1994.github.io/mi/static/homeGoods.json', {
 							params: {
 								page: that.page,
 								pageSize: that.pageSize
@@ -138,7 +138,7 @@
 					if(that.list.length >= 6) {
 						that.finished = true;
 					}
-				}, 2000);
+				}, 1000);
 			},
 			onRefresh() {
 				// 清空列表数据
@@ -149,6 +149,14 @@
 				this.loading = true;
 				this.onLoad();
 			},
+			clickItem: function(item) {
+				this.$router.push({
+					path: './shopOption',
+					query: {
+						item: item
+					}
+				})
+			}
 		}
 	}
 </script>

@@ -8,7 +8,9 @@ import 'vant/lib/index.css'
 Vue.use(Vant)
 import 'amfe-flexible/index.js'
 import BScroll from 'better-scroll'
-const axios = require('axios');
+
+import axios from 'axios';
+Vue.prototype.$axios = axios;
 import './rem.js'
 Vue.prototype.$http = axios
 Vue.config.productionTip = false

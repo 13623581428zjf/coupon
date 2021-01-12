@@ -13,6 +13,7 @@ import footerBar from '@/components/footerBar'
 import miList from '@/components/miList'
 import miShop from '@/components/miShop'
 import onepeple from '@/components/onepeple'
+import shopOption from '@/components/shopOption'
 
 Vue.use(Router)
 const originalReplace = Router.prototype.replace;
@@ -98,6 +99,12 @@ export default new Router({
 			path: '/components/onepeple',
 			name: 'onepeple',
 			component: onepeple
+		},
+		//商品详情
+		{
+			path: '/components/shopOption',
+			name: 'shopOption',
+			component: shopOption
 		}
 	]
 })

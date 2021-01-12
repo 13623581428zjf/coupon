@@ -135,7 +135,7 @@
 			},
 			//返回上一级
 			onClickLeft: function() {
-				console.log('返回')
+				this.$router.push('./home_mi')
 			},
 			onClickRight: function() {
 				console.log('右边')
