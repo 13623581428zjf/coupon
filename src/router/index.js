@@ -105,6 +105,7 @@ export default new Router({
 			path: '/components/shopOption',
 			name: 'shopOption',
 			component: shopOption
-		}
+		} 
+		 
 	]
 })
