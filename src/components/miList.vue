@@ -3,11 +3,7 @@
 	<div>
 		<!--分类-->
 		<div class="search">
-			<van-nav-bar :border=false title="分类" left-arrow left-text='' @click-left="onClickLeft" @click-right="onClickRight">
-				<template #right>
-					<van-icon name="search" size="18" color='#666' />
-				</template>
-			</van-nav-bar>
+			 <Header title="分类"></Header>
 			<!--中间-->
 			<div class="shop">
 				<!--左边-->
@@ -57,6 +53,7 @@
 	import { Toast } from 'vant';
 	import Data from './data.json'
 	import FooterBar from './footerBar.vue'
+	import Header from './headerd'
 	export default {
 		name: 'miList',
 		components: {},
@@ -75,7 +72,8 @@
 			this.searchgoods = Data;
 		},
 		components: {
-			FooterBar
+			FooterBar,
+			Header
 		},
 		watch: {
 			searchgoods() {

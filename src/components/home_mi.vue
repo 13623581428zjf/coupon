@@ -153,7 +153,7 @@
 				this.$router.push({
 					path: './shopOption',
 					query: {
-						item: item
+						id: item.id
 					}
 				})
 			}
@@ -208,15 +208,13 @@
 	}
 	
 	.my-swipe {}
-	
-	.my-swipe .van-swipe-item {
-		color: #fff;
-		font-size: 20px;
-		line-height: 150px;
-		text-align: center;
-		background-color: #39a9ed;
+	.van-swipe{
 	}
-	
+	.van-swipe-item{
+	}
+	.van-cell::after{
+		border-bottom: none;
+	}
 	.van-swipe-item img {
 		width: 100%;
 		height: 4rem;

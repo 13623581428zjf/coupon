@@ -14,12 +14,15 @@
 		<div class="listBs">
 			<div class="producy-info-list" @click="alertAction()">
 				<div class="producy-info-name">已选</div>
-				<div class="producy-info-section">{{miName}}&nbsp;{{section}}&nbsp;{{count}}</div>
+				<div class="producy-info-section">{{miName}}&nbsp;{{Memory}}&nbsp;X{{count}}</div>
 				<img src="../assets/xia.png.png" />
 			</div>
 			<div class="producy-info-list" @click="arrdes()">
 				<div class="producy-info-name">送至</div>
-				<div class="producy-info-section">北京</div>
+				<div class="producy-info-section" v-if="newAdress.length===0">北京</div>
+				<div class="producy-info-section" v-for="item in newAdress" v-else>
+					<div v-if="item">{{item.name}}</div>
+				</div>
 				<img src="../assets/xia.png.png" />
 			</div>
 		</div>
@@ -28,19 +31,53 @@
 			<img :src="item.img" />
 		</div>
 		<!--购物车弹框-->
-		<van-sku v-model="showBase" :sku="skuData.sku" :buy-text='buy_text' :goods="skuData.goods_info" :goods-id="skuData.goods_id" :show-add-cart-btn='skuData.show_add_cart_btn' :hide-stock="skuData.sku.hide_stock" :quota="skuData.quota" :quota-used="skuData.quota_used" :initial-sku="initialSku" reset-stepper-on-hide reset-selected-sku-on-hide disable-stepper-input :close-on-click-overlay="closeOnClickOverlay" :custom-sku-validator="customSkuValidator" @buy-clicked="onBuyClicked" @add-cart="onAddCartClicked" />
+		<van-action-sheet v-model="showAdrssShop">
+			<div class="closBos">
+				<img @click="Clost()" class="closimg" src="../assets/gb.png.png" />
+			</div>
+			<div class="shopAction">
+				<img :src="editionImg" />
+				<div class="shopOptionconcat">
+					<p>￥{{edition_price}}</p>
+					<p>{{miName}}{{Memory}}{{editionColor}}</p>
+				</div>
+			</div>
+			<div class="shopBb">版本</div>
+			<div class="shopG" v-for='(item,index) in goodsInfo.edition' @click="banb(item,index)"  :class="{'active':Memory == item.Memory}">
+				<div>{{item.Memory}}</div>
+				<div>{{item.edition_price}}元</div>
+			</div>
+			<div class="shopYS">颜色</div>
+			<div class="ColorList">
+				<div v-for='(item,index) in color_list' @click="ColorList(item,index)" :class="{'actived':editionColor == item.color_list}">{{item.color_list}}</div>
+			</div>
+			<div class="shopBu">
+				<div class="shopNum">购买数量</div>
+				<van-button size="small" @click='reduce()' v-if='num>1'>-</van-button>
+				<van-button class='vanCalss' size="small" @click='reduce()' v-else>-</van-button>
+				<input type="number" name="number" id="number" v-model="num" />
+				<van-button size="small" @click='num++'>+</van-button>
+			</div>
+			<van-button class='shopGo' type="primary" size="normal" @click='goShop()'>加入购物车</van-button>
+		</van-action-sheet>
 		<!--地址弹框-->
-		<van-action-sheet v-model="show">
+		<van-action-sheet v-model="showAdrss">
 			<div class="content">
 				<van-area :area-list="areaList" :columns-placeholder="['请选择', '请选择', '请选择']" @confirm='confirmed' @cancel='canceled()'></van-area>
 			</div>
 		</van-action-sheet>
+		<!--购物车底部定位-->
+		<van-goods-action>
+			<van-goods-action-icon icon="chat-o" text="客服" color="#ee0a24" badge="523" />
+			<van-goods-action-icon icon="cart-o" text="购物车" to='/components/miShop'/>
+			<van-goods-action-icon icon="star" text="已收藏" color="#ff5000" />
+			<van-goods-action-button style='font-size: .4rem;' type="warning" text="加入购物车" @click='alertAction()' />
+		</van-goods-action>
 	</div>
 </template>
 
 <script>
 	import { Toast } from 'vant';
-	import skuData from './skdata.js';
 	//地址
 	import AeraInfo from './area.js'
 	export default {
@@ -51,42 +88,57 @@
 		data() {
 			return {
 				imgLis: [],
+				ids:'',
 				miName: '',
 				Miinfo: '',
 				Miprice: '',
-				count: 1,
 				//G
-				section: '',
 				OptionImg: [],
 				areaList: {},
-				show: false,
+				Memory: '',
+				count: 1,
+				showAdrss: false,
 				//地址弹框
 				arrediss: false,
+				newAdress: [],
 				//购物车弹框
-				skuData: skuData,
-				showBase: false,
-				closeOnClickOverlay: true,
-				buy_text: '加入购物车',
-				initialSku: { //默认选中
-					s1: '30349',
-					s2: '1193',
-					selectedNum: 3
-				},
-				customSkuValidator: () => '请选择xxx!',
+				showAdrssShop: false,
+				editionImg: '',
+				edition_price: '',
+				editionColor: '',
+				goodsInfo: [],
+				color_list: [],
+				num: 1,
 			}
 		},
 		created: function() {
-			let shopop = this.$route.query.item;
-			this.imgLis = shopop.imgList;
-			this.miName = shopop.name;
-			this.Miinfo = shopop.info;
-			this.Miprice = shopop.price;
-			this.section = shopop.edition[0].Memory;
-			this.OptionImg = shopop.edition[0].color;
 			this.areaList = AeraInfo;
-			console.log(shopop);
-			console.log(AeraInfo);
+			this.ids = this.$route.query.id;
+			var that = this;
+			that.$axios.get('https://shiyaming1994.github.io/mi/static/homeGoods.json', {
+					params: {
 
+					}
+				})
+				.then(function(response) {
+					response.data.forEach((item, index) => {
+						if(that.ids == item.id) {
+							that.goodsInfo = item;
+							that.imgLis = item.imgList;
+							that.miName = item.name;
+							that.Miprice = item.price;
+							that.Miinfo = item.info;
+							that.OptionImg = item.info_img;
+							that.Memory = item.edition[0].Memory;
+							that.editionImg = item.edition[0].color[0].img;
+							that.edition_price = item.edition[0].edition_price;
+							that.editionColor = item.edition[0].color[0].color_list;
+						}
+					})
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
 		},
 
 		methods: {
@@ -95,38 +147,95 @@
 			},
 
 			alertAction: function() {
-				this.showBase = true;
+				this.showAdrssShop = true;
+				this.goodsInfo.edition.forEach((item, index) => {
+					if(this.Memory == item.Memory) {
+						this.color_list = item.color;
+						this.editionColor = item.color[0].color_list;
+					}
+				})
+
 			},
-			onAddCartClicked(data) { //加入购物车
-				//				this.$toast('add cart:' + JSON.stringify(data));
-			},
-			onBuyClicked(data) { //立即购买
-				this.$toast('buy:' + JSON.stringify(data));
-				console.log(JSON.stringify(data))
+			Clost() {
+				this.showAdrssShop = false;
 			},
 			//地址
 			arrdes: function() {
-				this.show = true;
+				this.showAdrss = true;
 			},
+			//			confirmed: function(data) {
+			//				if(data[0].code && data[0].code === "900000") {
+			//					if(data[1].code === '') {
+			//						Toast('请选择地址')
+			//						return;
+			//					}
+			//				} else {
+			//					if(data.some(item => item === undefined || item.code === '')) {
+			//						Toast('请选择地址')
+			//						return;
+			//					}
+			//				}
+			//				this.newAdress = data;
+			//				console.log(this.newAdress);
+			//				this.showAdrss = false;
+			//			},
 			confirmed: function(data) {
-				if(data[0].code && data[0].code === "900000") {
+				if(data[0].code && data[0].code === '900000') {
 					if(data[1].code === '') {
 						Toast('请选择地址')
 						return;
 					}
 				} else {
-					if(data.some(item => item === undefined || item.code === '')) {
+					if(data.some(item => item.code === undefined || item.code === '')) {
 						Toast('请选择地址')
 						return;
 					}
 				}
-
-				this.show = false;
-				console.log(data)
+				this.newAdress = data;
+				this.showAdrss = false;
 			},
 			//取消
 			canceled: function() {
-				this.show = false;
+				this.showAdrss = false;
+
+			},
+
+			//版本
+			banb(item, index) {
+				this.Memory = item.Memory;
+				this.edition_price = item.edition_price;
+				this.goodsInfo.edition.forEach((item, index) => {
+					if(this.Memory == item.Memory) {
+						this.color_list = item.color;
+						this.editionColor = item.color[0].color_list;
+						
+					}
+				})
+			},
+			//颜色改变图片
+			ColorList(item, index) {
+				console.log(item);
+				this.editionImg = item.img;
+				this.editionColor = item.color_list;
+			},
+			//减减
+			reduce(){
+				if (this.num>1) {
+					this.num--
+				}
+			},
+			//加入购物车
+			goShop: function() {
+				this.count = this.num;
+				 let buyGoodsInfo = {
+				 	ids:this.ids,
+				 	num:this.num,
+				 	Memory:this.Memory,
+				 	edition_price:this.edition_price,
+				 	editionColor:this.editionColor,
+				 	img:this.editionImg
+				 }
+				 console.log(buyGoodsInfo)
 			}
 
 		}
@@ -199,19 +308,22 @@
 	.producy-info-name {
 		font-size: .26rem;
 		color: rgba(0, 0, 0, .54);
-		width: 15%;
-		text-align: center;
+		width: 25%;
 	}
 	
 	.producy-info-section {
 		font-size: .26rem;
-		margin-left: .5rem;
-		width: 67%;
+		width: 70%;
 	}
+	
+	.producy-info-section div {
+		margin-left: 1rem;
+	}
+	
+	.OptionImg {}
 	
 	.OptionImg img {
 		width: 100%;
-		margin: 1rem 0;
 	}
 	
 	.van-goods-action {
@@ -226,13 +338,7 @@
 	}
 	
 	.van-goods-action-button {
-		background: #f56600;
-		border-radius: .3rem;
-		overflow: hidden;
-		color: #fff;
-		font-size: .4rem;
-		width: 3rem;
-		margin-right: .3rem;
+		margin-bottom: .13rem;
 	}
 	
 	.position {
@@ -256,6 +362,172 @@
 	}
 	
 	.content {
-		padding: 16px 16px 160px;
+		padding: 16px 16px 292px;
+	}
+	
+	.van-action-sheet .closBos {
+		position: absolute;
+	}
+	
+	.closimg {
+		width: .3rem;
+		height: .3rem;
+		margin-left: 6.9rem;
+		margin-top: .3rem;
+	}
+	
+	.shopAction {
+		height: 1.4rem;
+		display: flex;
+	}
+	
+	.shopAction {
+		margin: 1rem .3rem;
+	}
+	
+	.shopAction img {
+		width: 2rem;
+		height: 2rem;
+		border: 1px solid #D9DDE1;
+		margin-left: .25rem;
+	}
+	
+	.shopOptionconcat p {
+		margin-left: .2rem;
+	}
+	
+	.shopOptionconcat p:first-of-type {
+		font-size: .5rem;
+		font-weight: 400;
+		margin-top: .3rem;
+	}
+	
+	.shopOptionconcat p:last-of-type {
+		color: rgba(0, 0, 0, .87);
+		font-size: .3rem;
+		margin-top: .1rem;
+	}
+	
+	.shopBb,
+	.shopYS {
+		font-size: .24rem;
+		margin: 0 .53rem;
+	}
+	
+	.shopG {
+		display: flex;
+		width: 6.5rem;
+		height: .7rem;
+		color: #8F8F94;
+		align-items: center;
+		margin: .25rem .53rem;
+		border: 1px solid #949499;
+	}
+	/*.active{
+		border: 1px solid #FF6700;
+	}*/
+	
+	.ColorList div.actived {
+		border: 1px solid #FF6700;
+		color: #FF6700;
+	}
+	
+	.shopG.active {
+		border: 1px solid #FF6700;
+		color: #FF6700;
+	}
+	
+	.shopG div {
+		font-size: .3rem;
+	}
+	
+	.shopG div:first-of-type {
+		width: 50%;
+		margin-left: .2rem;
+	}
+	
+	.shopG div:last-of-type {
+		flex: 1;
+		text-align: right;
+		margin-right: .2rem;
+	}
+	
+	.ColorList {
+		display: flex;
+		padding: .25rem .24rem;
+		box-sizing: border-box;
+	}
+	
+	.ColorList div {
+		color: #8f8f94;
+		width: 1rem;
+		height: .6rem;
+		font-size: .3rem;
+		line-height: .6rem;
+		text-align: center;
+		margin-left: .3rem;
+		border: 1px solid #8f8f94;
+	}
+	
+	.shopBu {
+		display: flex;
+	}
+	
+	.shopBu input{
+		width: .7rem;
+		height: .63rem;
+		text-align: center;
+		margin-top: .24rem;
+		border: none;
+		font-size: .4rem;
+	}
+	
+	.shopNum {
+		font-size: .26rem;
+		margin-left: .5rem;
+		width: 4.5rem;
+		height: 1.4rem;
+		line-height: 1.2rem;
+	}
+	
+	.van-button {
+		width: .7rem;
+		height: .7rem;
+		background: #ff6700;
+		font-size: .5rem;
+		font-weight: 100;
+		color: white;
+		margin-top: .2rem;
+	}
+	.vanCalss{
+		width: .7rem;
+		height: .7rem;
+		background: #D9DDE1;
+		font-size: .5rem;
+		font-weight: 100;
+		color: white;
+		margin-top: .2rem;
+	}
+	.num {
+		width: .7rem;
+		height: .7rem;
+		text-align: center;
+		line-height: .8rem;
+		margin-top: .2rem;
+		font-size: .4rem;
+	}
+	
+	.shopGo {
+		width: 87%;
+		height: .64rem;
+		background: #ff6700;
+		font-size: .28rem;
+		text-align: center;
+		line-height: .64rem;
+		border-radius: .4rem;
+		border: none;
+		color: #fff;
+		margin-bottom: .1rem;
+		margin-left: .53rem;
 	}
 </style>

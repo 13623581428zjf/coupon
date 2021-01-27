@@ -14,6 +14,10 @@ import miList from '@/components/miList'
 import miShop from '@/components/miShop'
 import onepeple from '@/components/onepeple'
 import shopOption from '@/components/shopOption'
+import demo from '@/components/demo'
+import Parent from '@/compont/Parent'
+import child from '@/compont/child'
+import headerd from '@/components/headerd'
 
 Vue.use(Router)
 const originalReplace = Router.prototype.replace;
@@ -105,6 +109,30 @@ export default new Router({
 			path: '/components/shopOption',
 			name: 'shopOption',
 			component: shopOption
+		}, 
+		//商品详情
+		{
+			path: '/components/demo',
+			name: 'demo',
+			component: demo
+		},
+		//组件传值
+		{
+			path: '/compont/Parent',
+			name: 'Parent',
+			component: Parent
+		},
+		//组件传值
+		{
+			path: '/compont/child',
+			name: 'child',
+			component: child
+		}, 
+		//头部组件
+		{
+			path: '/components/headerd',
+			name: 'headerd',
+			component: headerd
 		} 
 		 
 	]
