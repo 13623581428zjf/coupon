@@ -18,6 +18,7 @@ import demo from '@/components/demo'
 import Parent from '@/compont/Parent'
 import child from '@/compont/child'
 import headerd from '@/components/headerd'
+import vuex from '@/components/vuex'
 
 Vue.use(Router)
 const originalReplace = Router.prototype.replace;
@@ -133,6 +134,12 @@ export default new Router({
 			path: '/components/headerd',
 			name: 'headerd',
 			component: headerd
+		},
+		//练习vuex
+		{
+			path: '/components/vuex',
+			name: 'vuex',
+			component: vuex
 		} 
 		 
 	]

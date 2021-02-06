@@ -45,28 +45,28 @@
 			</div>
 		</div>
 		<div class="HuiChat">
-			<img class="ImgO" src="../assets/yh.png.png" />
+			<!--<img class="ImgO" src="../assets/yh.png.png" />-->
 			<div>
 				<p>我的优惠</p>
 				<img src="../assets/xia.png.png" />
 			</div>
 		</div>
 		<div class="HuiChat" style="margin-top: 0;">
-			<img class="ImgO" style="width: .5rem;height: .5rem;margin-left: .27rem;" src="../assets/j.png.png" />
+			<!--<img class="ImgO" style="width: .5rem;height: .5rem;margin-left: .27rem;" src="../assets/j.png.png" />-->
 			<div style="border-bottom: none;width: 6.2rem;margin-left: -.1rem;">
 				<p>我的意见</p>
 				<img src="../assets/xia.png.png" />
 			</div>
 		</div>
 		<div class="HuiChat">
-			<img class="ImgO" src="../assets/ly.png.png" />
+			<!--<img class="ImgO" src="../assets/ly.png.png" />-->
 			<div style="border-bottom: none;">
 				<p>浏览记录</p>
 				<img src="../assets/xia.png.png" />
 			</div>
 		</div>
 		<div class="HuiChat" style="margin-top: 0;margin-top: .25rem;">
-			<img class="ImgO" src="../assets/mp.png.png" />
+			<!--<img class="ImgO" src="../assets/mp.png.png" />-->
 			<div style="border-bottom: none;">
 				<p>我的名片</p>
 				<img src="../assets/xia.png.png" />

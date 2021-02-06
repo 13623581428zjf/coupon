@@ -8,17 +8,19 @@ import 'vant/lib/index.css'
 Vue.use(Vant)
 import 'amfe-flexible/index.js'
 import BScroll from 'better-scroll'
-
 import axios from 'axios';
 Vue.prototype.$axios = axios;
 import './rem.js'
 Vue.prototype.$http = axios
+//引入store
+import store from './vuex/store'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

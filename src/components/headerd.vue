@@ -1,11 +1,11 @@
 <template>
 	<div class="headerd">
 		<div class="headerRe">
-			<img src="../assets/ret.png.png" />
+			<img @click="GoBack()" src="../assets/ret.png.png"/>
 			<p>{{title}}</p>
 			<img src="../assets/搜索.png" />
 		</div>
-		
+
 	</div>
 </template>
 
@@ -14,22 +14,23 @@
 	export default {
 		name: 'headerd',
 		components: {},
-		props:{
-			title:{
-				type:String,
-				default:'头部'
+		props: {
+			title: {
+				type: String,
+				default: '头部'
 			}
 		},
 		data() {
-			return {
-			}
+			return {}
 		},
 		created: function() {
 
 		},
 
 		methods: {
-
+			GoBack() {
+				this.$emit('goBack',this.title)
+			}
 		}
 	}
 </script>

@@ -3,7 +3,7 @@
 	<div>
 		<!--分类-->
 		<div class="search">
-			 <Header title="分类"></Header>
+			 <Header title="分类" @goBack=gobye></Header>
 			<!--中间-->
 			<div class="shop">
 				<!--左边-->
@@ -137,6 +137,9 @@
 			},
 			onClickRight: function() {
 				console.log('右边')
+			},
+			gobye(){
+				this.$router.go(-1);
 			}
 
 		},

@@ -65,7 +65,7 @@
 		padding-bottom: .2rem;
 		display: flex;
 		background: #fff;
-		border: 1px solid #DFDFDF;
+		border-top: 1px solid #DFDFDF;
 	}
 	.tab-item{
 		display: flex;
