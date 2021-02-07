@@ -77,453 +77,463 @@
 	</div>
 </template>
 
-<script>import Vue from 'vue';
-import { Notify } from 'vant';
-import { Toast } from 'vant';
-//地址
-import AeraInfo from './area.js'
-Vue.use(Notify);
-export default {
-	name: 'shopOption',
-	components: {
-		[Notify.Component.name]: Notify.Component,
-	},
-	data() {
-		return {
-			imgLis: [],
-			ids: '',
-			miName: '',
-			Miinfo: '',
-			Miprice: '',
-			//G
-			OptionImg: [],
-			areaList: {},
-			Memory: '',
-			count: 1,
-			showAdrss: false,
-			//地址弹框
-			arrediss: false,
-			newAdress: [],
-			//购物车弹框
-			showAdrssShop: false,
-			editionImg: '',
-			edition_price: '',
-			editionColor: '',
-			goodsInfo: [],
-			color_list: [],
-			num: 1,
-			badgeShop: 0,
-			shopLocal: []
-		}
-	},
-	created: function() {
-		this.areaList = AeraInfo;
-		this.ids = this.$route.query.id;
-		var that = this;
-		that.$axios.get('https://shiyaming1994.github.io/mi/static/homeGoods.json', {
-				params: {
+<script>
+	import Vue from 'vue';
+	import { Notify } from 'vant';
+	import { Toast } from 'vant';
+	//地址
+	import AeraInfo from './area.js'
+	Vue.use(Notify);
+	export default {
+		name: 'shopOption',
+		components: {
+			[Notify.Component.name]: Notify.Component,
+		},
+		data() {
+			return {
+				imgLis: [],
+				ids: '',
+				miName: '',
+				Miinfo: '',
+				Miprice: '',
+				//G
+				OptionImg: [],
+				areaList: {},
+				Memory: '',
+				count: 1,
+				showAdrss: false,
+				//地址弹框
+				arrediss: false,
+				newAdress: [],
+				//购物车弹框
+				showAdrssShop: false,
+				editionImg: '',
+				edition_price: '',
+				editionColor: '',
+				goodsInfo: [],
+				color_list: [],
+				num: 1,
+				badgeShop: 0,
+				shopLocal: []
+			}
+		},
+		mounted() {
+			let shopCart = this.$getlocalStorage('ShopCar');
+			if(shopCart!=''){
+				this.shopLocal = shopCart;
+			}
 
-				}
-			})
-			.then(function(response) {
-				response.data.forEach((item, index) => {
-					if(that.ids == item.id) {
-						that.goodsInfo = item;
-						that.imgLis = item.imgList;
-						that.miName = item.name;
-						that.Miprice = item.price;
-						that.Miinfo = item.info;
-						that.OptionImg = item.info_img;
-						that.Memory = item.edition[0].Memory;
-						that.editionImg = item.edition[0].color[0].img;
-						that.edition_price = item.edition[0].edition_price;
-						that.editionColor = item.edition[0].color[0].color_list;
+			
+		},
+		created: function() {
+			this.areaList = AeraInfo;
+			this.ids = this.$route.query.id;
+			var that = this;
+			that.$axios.get('https://shiyaming1994.github.io/mi/static/homeGoods.json', {
+					params: {
+
 					}
 				})
-			})
-			.catch(function(error) {
-				console.log(error);
-			});
-	},
-
-	methods: {
-		clikMe: function() {
-			this.$router.go(-1)
+				.then(function(response) {
+					response.data.forEach((item, index) => {
+						if(that.ids == item.id) {
+							that.goodsInfo = item;
+							that.imgLis = item.imgList;
+							that.miName = item.name;
+							that.Miprice = item.price;
+							that.Miinfo = item.info;
+							that.OptionImg = item.info_img;
+							that.Memory = item.edition[0].Memory;
+							that.editionImg = item.edition[0].color[0].img;
+							that.edition_price = item.edition[0].edition_price;
+							that.editionColor = item.edition[0].color[0].color_list;
+						}
+					})
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
 		},
 
-		alertAction: function() {
-			this.showAdrssShop = true;
-			this.goodsInfo.edition.forEach((item, index) => {
-				if(this.Memory == item.Memory) {
-					this.color_list = item.color;
-					this.editionColor = item.color[0].color_list;
+		methods: {
+			clikMe: function() {
+				this.$router.go(-1)
+			},
+
+			alertAction: function() {
+				this.showAdrssShop = true;
+				this.goodsInfo.edition.forEach((item, index) => {
+					if(this.Memory == item.Memory) {
+						this.color_list = item.color;
+						this.editionColor = item.color[0].color_list;
+					}
+				})
+
+			},
+			Clost() {
+				this.showAdrssShop = false;
+
+			},
+			//地址
+			arrdes: function() {
+				this.showAdrss = true;
+			},
+			confirmed: function(data) {
+				if(data[0].code && data[0].code === '900000') {
+					if(data[1].code === '') {
+						Toast('请选择地址')
+						return;
+					}
+				} else {
+					if(data.some(item => item.code === undefined || item.code === '')) {
+						Toast('请选择地址')
+						return;
+					}
 				}
-			})
+				this.newAdress = data;
+				this.showAdrss = false;
+			},
+			//取消
+			canceled: function() {
+				this.showAdrss = false;
 
-		},
-		Clost() {
-			this.showAdrssShop = false;
+			},
 
-		},
-		//地址
-		arrdes: function() {
-			this.showAdrss = true;
-		},
-		confirmed: function(data) {
-			if(data[0].code && data[0].code === '900000') {
-				if(data[1].code === '') {
-					Toast('请选择地址')
-					return;
+			//版本
+			banb(item, index) {
+				this.Memory = item.Memory;
+				this.edition_price = item.edition_price;
+				this.goodsInfo.edition.forEach((item, index) => {
+					if(this.Memory == item.Memory) {
+						this.color_list = item.color;
+						this.editionColor = item.color[0].color_list;
+
+					}
+				})
+			},
+			//颜色改变图片
+			ColorList(item, index) {
+				this.editionImg = item.img;
+				this.editionColor = item.color_list;
+			},
+			//减减
+			reduce() {
+				if(this.num > 1) {
+					this.num--
 				}
-			} else {
-				if(data.some(item => item.code === undefined || item.code === '')) {
-					Toast('请选择地址')
-					return;
-				}
-			}
-			this.newAdress = data;
-			this.showAdrss = false;
-		},
-		//取消
-		canceled: function() {
-			this.showAdrss = false;
+			},
+			//加入购物车
+			goShop: function() {
+				this.count = this.num;
+				let buyGoodsInfo = {
+					ids: this.ids,
+					num: this.num,
+					Memory: this.Memory,
+					edition_price: this.edition_price,
+					editionColor: this.editionColor,
+					img: this.editionImg
+				};
+				this.shopLocal.push(buyGoodsInfo);
+				this.$setlocalStorage('ShopCar',this.shopLocal);
+				Notify({
+					type: 'success',
+					message: '添加成功'
+				});
+				this.showAdrssShop = false;
+			},
 
-		},
-
-		//版本
-		banb(item, index) {
-			this.Memory = item.Memory;
-			this.edition_price = item.edition_price;
-			this.goodsInfo.edition.forEach((item, index) => {
-				if(this.Memory == item.Memory) {
-					this.color_list = item.color;
-					this.editionColor = item.color[0].color_list;
-
-				}
-			})
-		},
-		//颜色改变图片
-		ColorList(item, index) {
-			this.editionImg = item.img;
-			this.editionColor = item.color_list;
-		},
-		//减减
-		reduce() {
-			if(this.num > 1) {
-				this.num--
-			}
-		},
-		//加入购物车
-		goShop: function() {
-			this.count = this.num;
-			let buyGoodsInfo = {
-				ids: this.ids,
-				num: this.num,
-				Memory: this.Memory,
-				edition_price: this.edition_price,
-				editionColor: this.editionColor,
-				img: this.editionImg
-			};
-			this.shopLocal.push(buyGoodsInfo);
-			localStorage.setItem('ShopCar', JSON.stringify(buyGoodsInfo));
-			Notify({
-				type: 'success',
-				message: '添加成功'
-			});
-			this.showAdrssShop = false;
-		},
-
+		}
 	}
-}</script>
-<style scoped>.van-swipe-item img {
-	width: 100%;
-}
-
-i img {
-	width: .6rem;
-	height: .6rem;
-	position: fixed;
-	top: .3rem;
-	left: .3rem;
-}
-
-.itemNamr {
-	font-weight: 400;
-	font-size: .5rem;
-	margin: .2rem .3rem;
-}
-
-.miInfo {
-	font-size: .26rem;
-	line-height: .5rem;
-	font-weight: 100;
-	padding: 0 .3rem;
-	box-sizing: border-box;
-	width: 100%;
-}
-
-.Miprice {
-	color: #ff6700;
-	font-size: .48rem;
-	margin: 0 .3rem;
-}
-
-.listBs {
-	width: 90%;
-	outline: none;
-	border-radius: .16rem;
-	background: #fafafa;
-	padding: .24rem 0rem;
-	margin: .2rem .38rem;
-}
-
-.producy-info-list {
-	display: flex;
-	border-bottom: 1px solid #E0E0E0;
-	padding-bottom: .3rem;
-	box-sizing: border-box;
-	width: 100%;
-	margin-top: .1rem;
-}
-
-.producy-info-list img {
-	width: .4rem;
-	height: .4rem;
-}
-
-.producy-info-list:last-of-type {
-	border-bottom: none;
-	margin-top: .3rem;
-	padding-bottom: .1rem;
-	box-sizing: border-box;
-}
-
-.producy-info-name {
-	font-size: .26rem;
-	color: rgba(0, 0, 0, .54);
-	width: 25%;
-}
-
-.producy-info-section {
-	font-size: .26rem;
-	width: 70%;
-}
-
-.producy-info-section div {
-	margin-left: 1rem;
-}
-
-.OptionImg {}
-
-.OptionImg img {
-	width: 100%;
-}
-
-.van-goods-action {
-	margin-bottom: .3rem;
-	border-radius: .16rem;
-	margin-left: .25rem;
-	height: 1rem;
-	width: 7rem;
-	border: 1px solid #e5e5e5;
-	background: #fff;
-	box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px rgba(0, 0, 0, .14), 0 1px 10px rgba(0, 0, 0, .12);
-}
-
-.van-goods-action-button {
-	margin-bottom: .13rem;
-}
-
-.position {
-	width: 100%;
-	height: 100%;
-	position: fixed;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, .8);
-}
-
-.van-area {
-	z-index: 999;
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	border-radius: .2rem;
-}
-
-.content {
-	padding: 16px 16px 292px;
-}
-
-.van-action-sheet .closBos {
-	position: absolute;
-}
-
-.closimg {
-	width: .3rem;
-	height: .3rem;
-	margin-left: 6.9rem;
-	margin-top: .3rem;
-}
-
-.shopAction {
-	height: 1.4rem;
-	display: flex;
-}
-
-.shopAction {
-	margin: 1rem .3rem;
-}
-
-.shopAction img {
-	width: 2rem;
-	height: 2rem;
-	border: 1px solid #D9DDE1;
-	margin-left: .25rem;
-}
-
-.shopOptionconcat p {
-	margin-left: .2rem;
-}
-
-.shopOptionconcat p:first-of-type {
-	font-size: .5rem;
-	font-weight: 400;
-	margin-top: .3rem;
-}
-
-.shopOptionconcat p:last-of-type {
-	color: rgba(0, 0, 0, .87);
-	font-size: .3rem;
-	margin-top: .1rem;
-}
-
-.shopBb,
-.shopYS {
-	font-size: .24rem;
-	margin: 0 .53rem;
-}
-
-.shopG {
-	display: flex;
-	width: 6.5rem;
-	height: .7rem;
-	color: #8F8F94;
-	align-items: center;
-	margin: .25rem .53rem;
-	border: 1px solid #949499;
-}
-
-
-/*.active{
+</script>
+<style scoped>
+	.van-swipe-item img {
+		width: 100%;
+	}
+	
+	i img {
+		width: .6rem;
+		height: .6rem;
+		position: fixed;
+		top: .3rem;
+		left: .3rem;
+	}
+	
+	.itemNamr {
+		font-weight: 400;
+		font-size: .5rem;
+		margin: .2rem .3rem;
+	}
+	
+	.miInfo {
+		font-size: .26rem;
+		line-height: .5rem;
+		font-weight: 100;
+		padding: 0 .3rem;
+		box-sizing: border-box;
+		width: 100%;
+	}
+	
+	.Miprice {
+		color: #ff6700;
+		font-size: .48rem;
+		margin: 0 .3rem;
+	}
+	
+	.listBs {
+		width: 90%;
+		outline: none;
+		border-radius: .16rem;
+		background: #fafafa;
+		padding: .24rem 0rem;
+		margin: .2rem .38rem;
+	}
+	
+	.producy-info-list {
+		display: flex;
+		border-bottom: 1px solid #E0E0E0;
+		padding-bottom: .3rem;
+		box-sizing: border-box;
+		width: 100%;
+		margin-top: .1rem;
+	}
+	
+	.producy-info-list img {
+		width: .4rem;
+		height: .4rem;
+	}
+	
+	.producy-info-list:last-of-type {
+		border-bottom: none;
+		margin-top: .3rem;
+		padding-bottom: .1rem;
+		box-sizing: border-box;
+	}
+	
+	.producy-info-name {
+		font-size: .26rem;
+		color: rgba(0, 0, 0, .54);
+		width: 25%;
+	}
+	
+	.producy-info-section {
+		font-size: .26rem;
+		width: 70%;
+	}
+	
+	.producy-info-section div {
+		margin-left: 1rem;
+	}
+	
+	.OptionImg {}
+	
+	.OptionImg img {
+		width: 100%;
+	}
+	
+	.van-goods-action {
+		margin-bottom: .3rem;
+		border-radius: .16rem;
+		margin-left: .25rem;
+		height: 1rem;
+		width: 7rem;
+		border: 1px solid #e5e5e5;
+		background: #fff;
+		box-shadow: 0 2px 4px -1px rgba(0, 0, 0, .2), 0 4px 5px rgba(0, 0, 0, .14), 0 1px 10px rgba(0, 0, 0, .12);
+	}
+	
+	.van-goods-action-button {
+		margin-bottom: .13rem;
+	}
+	
+	.position {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, .8);
+	}
+	
+	.van-area {
+		z-index: 999;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		border-radius: .2rem;
+	}
+	
+	.content {
+		padding: 16px 16px 292px;
+	}
+	
+	.van-action-sheet .closBos {
+		position: absolute;
+	}
+	
+	.closimg {
+		width: .3rem;
+		height: .3rem;
+		margin-left: 6.9rem;
+		margin-top: .3rem;
+	}
+	
+	.shopAction {
+		height: 1.4rem;
+		display: flex;
+	}
+	
+	.shopAction {
+		margin: 1rem .3rem;
+	}
+	
+	.shopAction img {
+		width: 2rem;
+		height: 2rem;
+		border: 1px solid #D9DDE1;
+		margin-left: .25rem;
+	}
+	
+	.shopOptionconcat p {
+		margin-left: .2rem;
+	}
+	
+	.shopOptionconcat p:first-of-type {
+		font-size: .5rem;
+		font-weight: 400;
+		margin-top: .3rem;
+	}
+	
+	.shopOptionconcat p:last-of-type {
+		color: rgba(0, 0, 0, .87);
+		font-size: .3rem;
+		margin-top: .1rem;
+	}
+	
+	.shopBb,
+	.shopYS {
+		font-size: .24rem;
+		margin: 0 .53rem;
+	}
+	
+	.shopG {
+		display: flex;
+		width: 6.5rem;
+		height: .7rem;
+		color: #8F8F94;
+		align-items: center;
+		margin: .25rem .53rem;
+		border: 1px solid #949499;
+	}
+	/*.active{
 		border: 1px solid #FF6700;
 	}*/
-
-.ColorList div.actived {
-	border: 1px solid #FF6700;
-	color: #FF6700;
-}
-
-.shopG.active {
-	border: 1px solid #FF6700;
-	color: #FF6700;
-}
-
-.shopG div {
-	font-size: .3rem;
-}
-
-.shopG div:first-of-type {
-	width: 50%;
-	margin-left: .2rem;
-}
-
-.shopG div:last-of-type {
-	flex: 1;
-	text-align: right;
-	margin-right: .2rem;
-}
-
-.ColorList {
-	display: flex;
-	padding: .25rem .24rem;
-	box-sizing: border-box;
-}
-
-.ColorList div {
-	color: #8f8f94;
-	width: 1rem;
-	height: .6rem;
-	font-size: .3rem;
-	line-height: .6rem;
-	text-align: center;
-	margin-left: .3rem;
-	border: 1px solid #8f8f94;
-}
-
-.shopBu {
-	display: flex;
-}
-
-.shopBu input {
-	width: .7rem;
-	height: .63rem;
-	text-align: center;
-	margin-top: .24rem;
-	border: none;
-	font-size: .4rem;
-}
-
-.shopNum {
-	font-size: .26rem;
-	margin-left: .5rem;
-	width: 4.5rem;
-	height: 1.4rem;
-	line-height: 1.2rem;
-}
-
-.van-button {
-	width: .7rem;
-	height: .7rem;
-	background: #ff6700;
-	font-size: .5rem;
-	font-weight: 100;
-	color: white;
-	margin-top: .2rem;
-}
-
-.vanCalss {
-	width: .7rem;
-	height: .7rem;
-	background: #D9DDE1;
-	font-size: .5rem;
-	font-weight: 100;
-	color: white;
-	margin-top: .2rem;
-}
-
-.num {
-	width: .7rem;
-	height: .7rem;
-	text-align: center;
-	line-height: .8rem;
-	margin-top: .2rem;
-	font-size: .4rem;
-}
-
-.shopGo {
-	width: 87%;
-	height: .64rem;
-	background: #ff6700;
-	font-size: .28rem;
-	text-align: center;
-	line-height: .64rem;
-	border-radius: .4rem;
-	border: none;
-	color: #fff;
-	margin-bottom: .1rem;
-	margin-left: .53rem;
-}</style>
+	
+	.ColorList div.actived {
+		border: 1px solid #FF6700;
+		color: #FF6700;
+	}
+	
+	.shopG.active {
+		border: 1px solid #FF6700;
+		color: #FF6700;
+	}
+	
+	.shopG div {
+		font-size: .3rem;
+	}
+	
+	.shopG div:first-of-type {
+		width: 50%;
+		margin-left: .2rem;
+	}
+	
+	.shopG div:last-of-type {
+		flex: 1;
+		text-align: right;
+		margin-right: .2rem;
+	}
+	
+	.ColorList {
+		display: flex;
+		padding: .25rem .24rem;
+		box-sizing: border-box;
+	}
+	
+	.ColorList div {
+		color: #8f8f94;
+		width: 1rem;
+		height: .6rem;
+		font-size: .3rem;
+		line-height: .6rem;
+		text-align: center;
+		margin-left: .3rem;
+		border: 1px solid #8f8f94;
+	}
+	
+	.shopBu {
+		display: flex;
+	}
+	
+	.shopBu input {
+		width: .7rem;
+		height: .63rem;
+		text-align: center;
+		margin-top: .24rem;
+		border: none;
+		font-size: .4rem;
+	}
+	
+	.shopNum {
+		font-size: .26rem;
+		margin-left: .5rem;
+		width: 4.5rem;
+		height: 1.4rem;
+		line-height: 1.2rem;
+	}
+	
+	.van-button {
+		width: .7rem;
+		height: .7rem;
+		background: #ff6700;
+		font-size: .5rem;
+		font-weight: 100;
+		color: white;
+		margin-top: .2rem;
+	}
+	
+	.vanCalss {
+		width: .7rem;
+		height: .7rem;
+		background: #D9DDE1;
+		font-size: .5rem;
+		font-weight: 100;
+		color: white;
+		margin-top: .2rem;
+	}
+	
+	.num {
+		width: .7rem;
+		height: .7rem;
+		text-align: center;
+		line-height: .8rem;
+		margin-top: .2rem;
+		font-size: .4rem;
+	}
+	
+	.shopGo {
+		width: 87%;
+		height: .64rem;
+		background: #ff6700;
+		font-size: .28rem;
+		text-align: center;
+		line-height: .64rem;
+		border-radius: .4rem;
+		border: none;
+		color: #fff;
+		margin-bottom: .1rem;
+		margin-left: .53rem;
+	}
+</style>
